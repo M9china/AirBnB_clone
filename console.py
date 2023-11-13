@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 """HNBNB Module"""
 import cmd
+from models import storage
 from models.basemodel import BaseModel
+from models.engine.file_storage import FileStorage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -9,19 +11,119 @@ class HBNBCommand(cmd.Cmd):
     HBNBCommand class
     """
     prompt = "(hbnb) "
-    __unique_entry = ["BaseModel"]
+    __unique_entry = ("BaseModel")
+    __unique_attr = ("id", "created_at", "updated_at")
 
     def do_create(self, line):
         """Create A BaseModel Instance"""
         if line == "":
             print("** class name missing **")
         else:
-            m = line.split()
-            if m[0] not in self.__unique_entry:
+            word_count = line.split()
+            if word_count[0] not in self.__unique_entry:
                 print("** class doesn't exist **")
             else:
                 cls_inst = BaseModel()
+                cls_inst.save()
                 print(cls_inst.id)
+
+    def do_show(self, line):
+        """
+        do_show method prints the string representation
+        """
+        if line == "":
+            print("** class name missing **")
+        else:
+            word_count = line.split()
+            if word_count[0] not in self.__unique_entry:
+                print("** class doesn't exist **")
+            elif len(word_count) == 1:
+                print("** instance id missing **")
+            elif len(word_count) == 2:
+                storage_key = storage.all()
+                inst_key = f"{word_count[0]}.{word_count[1]}"
+                if inst_key in storage_key.keys():
+                    print(storage_key[inst_key])
+                else:
+                    print("** no instance found **")
+
+    def do_destroy(self, line):
+        """
+        Deletes an instance based on the classname and id
+        """
+        if line == "":
+            print("** class name missing **")
+        else:
+            word_count = line.split()
+            if word_count[0] not in self.__unique_entry:
+                print("** class doesn't exist **")
+            elif len(word_count) == 1:
+                print("** instance id missing **")
+            elif len(word_count) == 2:
+                storage_key = storage.all()
+                inst_key = f"{word_count[0]}.{word_count[1]}"
+                if inst_key in storage_key.keys():
+                    del storage_key[inst_key]
+                    storage.save()
+                else:
+                    print("** no instance found **")
+
+    def do_all(self, line):
+        """
+        Prints all string representation of all instances
+        based or not on the class name.
+        """
+        storage_key = storage.all()
+        if line == "":
+            for val in storage_key.values():
+                print(val)
+        else:
+            word_count = line.split()
+            if word_count[0] not in self.__unique_entry:
+                print("** class doesn't exist **")
+            else:
+                for val in storage_key.values():
+                    if val.__class__.__name__ == word_count[0]:
+                        print(val)
+
+    def do_update(self, line):
+        """
+        Updates an instance based on the class name
+        and id by adding or updating attribute
+        """
+        storage_data = storage.all()
+        if line == "":
+            print("** class name missing **")
+        else:
+            wordcount = line.split()
+            inst_check = ""
+            if wordcount[0] not in self.__unique_entry:
+                print("** class doesn't exist **")
+            else:
+                if len(wordcount) == 1:
+                    print("** instance id missing **")
+                elif len(wordcount) == 2:
+                    print("** attribute name missing **")
+                elif len(wordcount) == 3:
+                    print("** value missing **")
+                else:
+                    inst_check = f"{wordcount[0]}.{wordcount[1]}"
+                    if inst_check not in storage_data.keys():
+                        print("** no instance found **")
+                        return False
+                    elif wordcount[2] in self.__unique_attr:
+                        print(f"** cannot update class attribute\
+                                                        \"{wordcount[2]}\"")
+                        return False
+                    else:
+                        storage_value = storage_data[inst_check]
+                        try:
+                            if type(eval(wordcount[3])) == int:
+                                storage_value.__dict__[wordcount[2]] = eval(wordcount[3])
+                        except NameError:
+                            storage_value.__dict__[wordcount[2]] = wordcount[3]
+                    storage.new(storage_data[inst_check])
+                    storage.save()
 
     def do_quit(self, line):
         """Exit the Programme"""
