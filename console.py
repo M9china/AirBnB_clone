@@ -2,7 +2,13 @@
 """HNBNB Module"""
 import cmd
 from models import storage
+from models.amenity import Amenity
 from models.basemodel import BaseModel
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
 from models.engine.file_storage import FileStorage
 
 
@@ -11,7 +17,7 @@ class HBNBCommand(cmd.Cmd):
     HBNBCommand class
     """
     prompt = "(hbnb) "
-    __unique_entry = ("BaseModel")
+    __unique_entry = ("Amenity", "BaseModel", "City", "Place", "Review", "State",  "User")
     __unique_attr = ("id", "created_at", "updated_at")
 
     def do_create(self, line):
@@ -23,7 +29,21 @@ class HBNBCommand(cmd.Cmd):
             if word_count[0] not in self.__unique_entry:
                 print("** class doesn't exist **")
             else:
-                cls_inst = BaseModel()
+                cls_inst = ""
+                if word_count[0] == "BaseModel":
+                    cls_inst = BaseModel()
+                elif word_count[0] == "User":
+                    cls_inst = User()
+                elif word_count[0] == "Amenity":
+                    cls_inst = Amenity()
+                elif word_count[0] == "City":
+                    cls_inst = City()
+                elif word_count[0] == "Place":
+                    cls_inst = Place()
+                elif word_count[0] == "Review":
+                    cls_inst = Review()
+                elif word_count[0] == "State":
+                    cls_inst = State()
                 cls_inst.save()
                 print(cls_inst.id)
 
