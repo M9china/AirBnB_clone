@@ -17,17 +17,16 @@ class BaseModel():
             args: tuple arguments
             kwargs: keyworded arguments
         """
+        pattern = "%Y-%m-%dT%H:%M:%S.%f"
         self.id = uuid.uuid4()
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
         if len(kwargs) != 0:
-            self.id = uuid.UUID(kwargs["id"])
-            self.created_at = datetime.strptime(kwargs["created_at"],
-                                                "%Y-%m-%dT%H:%M:%S.%f")
-            self.updated_at = datetime.strptime(kwargs["updated_at"],
-                                                "%Y-%m-%dT%H:%M:%S.%f")
-            self.my_number = kwargs["my_number"]
-            self.name = kwargs["name"]
+            for k_key, k_value in kwargs.items():
+                if k_key == "created_at" or k_key == "updated_at":
+                    self.__dict__[k_key] = datetime.strptime(k_value, pattern)
+                else:
+                    self.__dict__[k_key] = k_value
         else:
             models.storage.new(self)
 
@@ -53,9 +52,9 @@ class BaseModel():
         to_dict method
             returns a dictionary represntation
         """
-        a = self.__dict__
-        a["created_at"] = a["created_at"].isoformat()
-        a["updated_at"] = a["updated_at"].isoformat()
+        a = self.__dict__.copy()
+        a["created_at"] = self.created_at.isoformat()
+        a["updated_at"] = self.updated_at.isoformat()
         a["id"] = str(a["id"])
         a["__class__"] = self.__class__.__name__
         return a
