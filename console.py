@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """HNBNB Module"""
 import cmd
-from models.base_model import BaseModel
+from models.basemodel import BaseModel
 
 
 class HBNBCommand(cmd.Cmd):
