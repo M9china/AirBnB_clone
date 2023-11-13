@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 from io import StringIO
-from hbnb_module import HBNBCommand
+from console import HBNBCommand
 
 
 class TestHBNBCommand(unittest.TestCase):
