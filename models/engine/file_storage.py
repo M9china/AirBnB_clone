@@ -2,6 +2,7 @@
 """file storage"""
 
 import json
+from models.basemodel import BaseModel
 
 
 class FileStorage:
@@ -45,7 +46,9 @@ class FileStorage:
                 py_dict = json.load(json_file)
                 for val in py_dict.values():
                     cls_name = val["__class__"]
+                    #self.new(eval((cls_name)(**val)))
                     if cls_name == "BaseModel":
-                        self.new(eval(BaseModel(**val)))
+                        #self.new(eval(BaseModel(**val)))
+                        self.new(BaseModel(**val))
         except FileNotFoundError:
             return
