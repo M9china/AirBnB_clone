@@ -50,6 +50,17 @@ class TestHBNBCommand(unittest.TestCase):
                 mock_storage_save.assert_called_once()
                 self.assertEqual(mock_stdout.getvalue().strip(), "")
 
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_do_all(self, mock_stdout):
+        """
+        Test for 'do_all' method with a valid class input.
+        Expected output: String representation of all instances of the class.
+        """
+        with patch('models.storage.Storage.all') as mock_storage_all:
+            mock_storage_all.return_value = {"BaseModel.123": "instance"}
+            self.cmd.onecmd("all BaseModel")
+            self.assertEqual(mock_stdout.getvalue().strip(), "instance")
+
     def test_emptyline(self):
         """
         Test for 'emptyline' method.
