@@ -98,6 +98,17 @@ class TestHBNBCommand(unittest.TestCase):
         expected_output = "** NO COMMAND FOR invalid_command**"
         self.assertEqual(mock_stdout.getvalue().strip(), expected_output)
 
+    def test_do_count(self):
+        """
+        Test for 'do_count' method with a valid class input.
+        Expected output: Number of instances of the class.
+        """
+        with patch('models.storage.Storage.all') as mock_storage_all:
+            mock_storage_all.return_value = {"BaseModel.123": "instance"}
+            with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
+                self.cmd.onecmd("count BaseModel")
+                self.assertEqual(mock_stdout.getvalue().strip(), "1")
+
     def test_emptyline(self):
         """
         Test for 'emptyline' method.
