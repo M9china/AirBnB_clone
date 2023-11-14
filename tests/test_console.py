@@ -61,6 +61,22 @@ class TestHBNBCommand(unittest.TestCase):
             self.cmd.onecmd("all BaseModel")
             self.assertEqual(mock_stdout.getvalue().strip(), "instance")
 
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_do_update(self, mock_stdout):
+        """
+        Test for 'do_update' method with a valid class,
+        ID, attribute, and value input.
+        Expected output: No output (should print nothing).
+        """
+        with patch('models.storage.Storage.all') as mock_storage_all:
+            mock_storage_all.return_value = {"BaseModel.123": "instance"}
+            with patch('models.storage.Storage.new') as mock_storage_new:
+                with patch('models.storage.Storage.save') as mock_storage_save:
+                    self.cmd.onecmd("update BaseModel 123 name 'NewName'")
+                    mock_storage_new.assert_called_once()
+                    mock_storage_save.assert_called_once()
+                    self.assertEqual(mock_stdout.getvalue().strip(), "")
+
     def test_emptyline(self):
         """
         Test for 'emptyline' method.
