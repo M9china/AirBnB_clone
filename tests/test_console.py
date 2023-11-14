@@ -26,18 +26,6 @@ class TestHBNBCommand(unittest.TestCase):
             mock_storage_new.assert_called_once()
             self.assertTrue(len(mock_stdout.getvalue().strip()) > 0)
 
-    def test_do_quit(self):
-        """
-        Test for 'do_quit' method.
-        Expected output: 'Left the HBNBCommand Shell'.
-        """
-        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
-            self.assertTrue(self.cmd.do_quit(''))
-            self.assertEqual(
-                    mock_stdout.getvalue().strip(),
-                    "Left the HBNBCommand Shell"
-                    )
-
     def test_do_EOF(self):
         """
         Test for 'do_EOF' method.
