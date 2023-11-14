@@ -25,7 +25,7 @@ class TestHBNBCommand(unittest.TestCase):
             self.cmd.onecmd("create BaseModel")
             mock_storage_new.assert_called_once()
             self.assertTrue(len(mock_stdout.getvalue().strip()) > 0)
-            
+
     @patch('sys.stdout', new_callable=StringIO)
     def test_do_show(self, mock_stdout):
         """
@@ -36,6 +36,19 @@ class TestHBNBCommand(unittest.TestCase):
             mock_storage_all.return_value = {"BaseModel.123": "instance"}
             self.cmd.onecmd("show BaseModel 123")
             self.assertEqual(mock_stdout.getvalue().strip(), "instance")
+
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_do_destroy(self, mock_stdout):
+        """
+        Test for 'do_destroy' method with a valid class and ID input.
+        Expected output: No output (should print nothing).
+        """
+        with patch('models.storage.Storage.all') as mock_storage_all:
+            mock_storage_all.return_value = {"BaseModel.123": "instance"}
+            with patch('models.storage.Storage.save') as mock_storage_save:
+                self.cmd.onecmd("destroy BaseModel 123")
+                mock_storage_save.assert_called_once()
+                self.assertEqual(mock_stdout.getvalue().strip(), "")
 
     def test_emptyline(self):
         """
