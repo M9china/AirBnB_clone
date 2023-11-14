@@ -77,6 +77,17 @@ class TestHBNBCommand(unittest.TestCase):
                     mock_storage_save.assert_called_once()
                     self.assertEqual(mock_stdout.getvalue().strip(), "")
 
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_default_command(self, mock_stdout):
+        """
+        Test for 'default' method with a valid command.
+        Expected output: Custom output based on the command.
+        """
+        with patch('models.storage.Storage.all') as mock_storage_all:
+            mock_storage_all.return_value = {"BaseModel.123": "instance"}
+            self.cmd.onecmd("show BaseModel 123")
+            self.assertEqual(mock_stdout.getvalue().strip(), "instance")
+
     def test_emptyline(self):
         """
         Test for 'emptyline' method.
