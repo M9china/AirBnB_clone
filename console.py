@@ -20,6 +20,7 @@ class HBNBCommand(cmd.Cmd):
     __unique_entry = ("Amenity", "BaseModel",
                       "City", "Place", "Review", "State",  "User")
     __unique_attr = ("id", "created_at", "updated_at")
+    __unique_cmd = ("all")
 
     def do_create(self, line):
         """Create A BaseModel Instance"""
@@ -143,9 +144,9 @@ class HBNBCommand(cmd.Cmd):
                             if wordcount[2] == "password":
                                 raise NameError
                             if (type(eval(wordcount[3])) == int) or (
-                            type(eval(wordcount[3])) == float):
-                                storage_value.__dict__[wordcount[2]] = (
-                                eval(wordcount[3]))
+                                 type(eval(wordcount[3])) == float):
+                                 storage_value.__dict__[wordcount[2]] = (
+                                    eval(wordcount[3]))
                         except NameError:
                             if wordcount[2] == "amenity_ids":
                                 storage_value.__dict__[wordcount[2]].append(
@@ -155,6 +156,42 @@ class HBNBCommand(cmd.Cmd):
                                 wordcount[3])
                     storage.new(storage_data[inst_check])
                     storage.save()
+
+    def default(self, line):
+        """
+        Carry out some special commands
+        """
+        if "." in line and "(" in line and ")" in line:
+            line_word = line.split(".")
+            new_line = f"{line_word[0]}"
+            if "all" in line_word[1]:
+                self.do_all(new_line)
+            elif "count" in line_word[1]:
+                self.do_count(new_line)
+            elif "show" in line_word[1]:
+                temp_line = line_word[1].replace("show(", "")
+                id_line = temp_line.replace(")", "").replace("\"", "")
+                self.do_show(f"{new_line} {id_line}")
+            elif "destroy" in line_word[1]:
+                temp_line = line_word[1].replace("destroy(", "")
+                id_line = temp_line.replace(")", "").replace("\"", "")
+                self.do_destroy(f"{new_line} {id_line}")
+        else:
+            print(f"** NO COMMAND FOR {line}**")
+
+    def do_count(self, line):
+        """
+        This counts the number of instance of a particular class
+        """
+        if line == "":
+            print("** Class name missing **")
+        else:
+            class_count = storage.all()
+            count = 0
+            for key in class_count.keys():
+                if line in key:
+                    count += 1
+            print(count)
 
     def do_quit(self, line):
         """Exit the Programme"""
