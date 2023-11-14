@@ -88,6 +88,16 @@ class TestHBNBCommand(unittest.TestCase):
             self.cmd.onecmd("show BaseModel 123")
             self.assertEqual(mock_stdout.getvalue().strip(), "instance")
 
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_default_command_invalid(self, mock_stdout):
+        """
+        Test for 'default' method with an invalid command.
+        Expected output: Error message.
+        """
+        self.cmd.onecmd("invalid_command")
+        expected_output = "** NO COMMAND FOR invalid_command**"
+        self.assertEqual(mock_stdout.getvalue().strip(), expected_output)
+
     def test_emptyline(self):
         """
         Test for 'emptyline' method.
