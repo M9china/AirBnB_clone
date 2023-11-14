@@ -119,6 +119,16 @@ class TestHBNBCommand(unittest.TestCase):
             expected_output = "** Class name missing **"
             self.assertEqual(mock_stdout.getvalue().strip(), expected_output)
 
+    def test_do_count_nonexistent_class(self):
+        """
+        Test for 'do_count' method with a non-existent class input.
+        Expected output: Error message.
+        """
+        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
+            self.cmd.onecmd("count NonExistentClass")
+            expected_output = "** class doesn't exist **"
+            self.assertEqual(mock_stdout.getvalue().strip(), expected_output)
+
     def test_emptyline(self):
         """
         Test for 'emptyline' method.
