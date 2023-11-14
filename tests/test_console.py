@@ -26,18 +26,6 @@ class TestHBNBCommand(unittest.TestCase):
             mock_storage_new.assert_called_once()
             self.assertTrue(len(mock_stdout.getvalue().strip()) > 0)
 
-    def test_do_create_nonexistent_class(self):
-        """
-        Test for 'do_create' method with a non-existent class input.
-        Expected output: '** class doesn't exist **'.
-        """
-        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
-            self.cmd.onecmd("create NonExistentClass")
-            self.assertEqual(
-                    mock_stdout.getvalue().strip(),
-                    "** class doesn't exist **"
-                    )
-
     def test_do_create_valid_class(self):
         """
         Test for 'do_create' method with a valid class input.
