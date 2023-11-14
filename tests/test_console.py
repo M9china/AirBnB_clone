@@ -109,6 +109,16 @@ class TestHBNBCommand(unittest.TestCase):
                 self.cmd.onecmd("count BaseModel")
                 self.assertEqual(mock_stdout.getvalue().strip(), "1")
 
+    def test_do_count_missing_class(self):
+        """
+        Test for 'do_count' method with a missing class input.
+        Expected output: Error message.
+        """
+        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
+            self.cmd.onecmd("count")
+            expected_output = "** Class name missing **"
+            self.assertEqual(mock_stdout.getvalue().strip(), expected_output)
+
     def test_emptyline(self):
         """
         Test for 'emptyline' method.
