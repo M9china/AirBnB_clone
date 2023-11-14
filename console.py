@@ -17,7 +17,8 @@ class HBNBCommand(cmd.Cmd):
     HBNBCommand class
     """
     prompt = "(hbnb) "
-    __unique_entry = ("Amenity", "BaseModel", "City", "Place", "Review", "State",  "User")
+    __unique_entry = ("Amenity", "BaseModel",
+                      "City", "Place", "Review", "State",  "User")
     __unique_attr = ("id", "created_at", "updated_at")
 
     def do_create(self, line):
@@ -44,6 +45,7 @@ class HBNBCommand(cmd.Cmd):
                     cls_inst = Review()
                 elif word_count[0] == "State":
                     cls_inst = State()
+                storage.new(cls_inst)
                 cls_inst.save()
                 print(cls_inst.id)
 
@@ -138,10 +140,19 @@ class HBNBCommand(cmd.Cmd):
                     else:
                         storage_value = storage_data[inst_check]
                         try:
-                            if type(eval(wordcount[3])) == int:
-                                storage_value.__dict__[wordcount[2]] = eval(wordcount[3])
+                            if wordcount[2] == "password":
+                                raise NameError
+                            if type(eval(wordcount[3])) == int or
+                            type(eval(wordcount[3])) == float:
+                                storage_value.__dict__[wordcount[2]] =
+                                eval(wordcount[3])
                         except NameError:
-                            storage_value.__dict__[wordcount[2]] = wordcount[3]
+                            if wordcount[2] == "amenity_ids":
+                                storage_value.__dict__[wordcount[2]].append(
+                                        wordcount[3])
+                            else:
+                                storage_value.__dict__[wordcount[2]] =
+                                wordcount[3]
                     storage.new(storage_data[inst_check])
                     storage.save()
 

@@ -4,6 +4,11 @@
 import json
 from models.basemodel import BaseModel
 from models.user import User
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
 
 
 class FileStorage:
@@ -50,6 +55,16 @@ class FileStorage:
                     if cls_name == "BaseModel":
                         self.new(BaseModel(**val))
                     elif cls_name == "User":
-                        self.new(User())
+                        self.new(User(**val))
+                    elif cls_name == "Amenity":
+                        self.new(Amenity(**val))
+                    elif cls_name == "City":
+                        self.new(City(**val))
+                    elif cls_name == "Place":
+                        self.new(Place(**val))
+                    elif cls_name == "Review":
+                        self.new(Review(**val))
+                    elif cls_name == "State":
+                        self.new(State(**val))
         except FileNotFoundError:
             return

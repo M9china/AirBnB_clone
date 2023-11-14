@@ -45,7 +45,7 @@ class BaseModel():
         """
         a = self.__dict__
         a["id"] = str(a["id"])
-        return f"[{BaseModel.__name__}] ({str(self.id)}) {self.__dict__}"
+        return f"[{self.__class__.__name__}] ({str(self.id)}) {self.__dict__}"
 
     def to_dict(self):
         """
