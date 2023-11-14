@@ -15,17 +15,16 @@ class TestHBNBCommand(unittest.TestCase):
         """
         self.cmd = HBNBCommand()
 
-    def test_do_create_missing_class_name(self):
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_do_create(self, mock_stdout):
         """
-        Test for 'do_create' method with missing class name input.
-        Expected output: '** class name missing **'.
+        Test for 'do_create' method with valid class input.
+        Expected output: ID of the created instance
         """
-        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
-            self.cmd.onecmd("create")
-            self.assertEqual(
-                    mock_stdout.getvalue().strip(),
-                    "** class name missing **"
-                    )
+        with patch('models.storage.Storage.new') as mock_storage_new:
+            self.cmd.onecmd("create BaseModel")
+            mock_storage_new.assert_called_once()
+            self.assertTrue(len(mock_stdout.getvalue().strip()) > 0)
 
     def test_do_create_nonexistent_class(self):
         """
