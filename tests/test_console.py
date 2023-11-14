@@ -25,6 +25,17 @@ class TestHBNBCommand(unittest.TestCase):
             self.cmd.onecmd("create BaseModel")
             mock_storage_new.assert_called_once()
             self.assertTrue(len(mock_stdout.getvalue().strip()) > 0)
+            
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_do_show(self, mock_stdout):
+        """
+        Test for 'do_show' method with a valid class and ID input.
+        Expected output: String representation of the instance.
+        """
+        with patch('models.storage.Storage.all') as mock_storage_all:
+            mock_storage_all.return_value = {"BaseModel.123": "instance"}
+            self.cmd.onecmd("show BaseModel 123")
+            self.assertEqual(mock_stdout.getvalue().strip(), "instance")
 
     def test_emptyline(self):
         """
