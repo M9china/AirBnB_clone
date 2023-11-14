@@ -139,6 +139,16 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertEqual(mock_stdout.getvalue(
             ).strip(), "Left the HBNBCommand Shell")
 
+    def test_do_EOF(self):
+        """
+        Test for 'do_EOF' method.
+        Expected output: 'Left the HBNBCommand Shell'.
+        """
+        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
+            self.assertTrue(self.cmd.do_EOF(''))
+            self.assertEqual(mock_stdout.getvalue().strip(),
+                             "Left the HBNBCommand Shell")
+
     def test_emptyline(self):
         """
         Test for 'emptyline' method.
