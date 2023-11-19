@@ -153,8 +153,9 @@ class HBNBCommand(cmd.Cmd):
                                 storage_value.__dict__[wordcount[2]].append(
                                         wordcount[3])
                             else:
-                                storage_value.__dict__[wordcount[2]] =
-                                (wordcount[3])
+                                storage_value.__dict__[wordcount[2]] = (
+                                    eval(wordcount[3])
+                                )
                     storage.new(storage_data[inst_check])
                     storage.save()
 
