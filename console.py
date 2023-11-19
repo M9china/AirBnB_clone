@@ -3,13 +3,14 @@
 import cmd
 from models import storage
 from models.amenity import Amenity
-from models.basemodel import BaseModel
+from models.base_model import BaseModel
 from models.city import City
 from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
 from models.engine.file_storage import FileStorage
+import json
 
 
 class HBNBCommand(cmd.Cmd):
@@ -145,15 +146,15 @@ class HBNBCommand(cmd.Cmd):
                                 raise NameError
                             if (type(eval(wordcount[3])) == int) or (
                                  type(eval(wordcount[3])) == float):
-                                 storage_value.__dict__[wordcount[2]] = (
+                                storage_value.__dict__[wordcount[2]] = (
                                     eval(wordcount[3]))
                         except NameError:
                             if wordcount[2] == "amenity_ids":
                                 storage_value.__dict__[wordcount[2]].append(
                                         wordcount[3])
                             else:
-                                storage_value.__dict__[wordcount[2]] = (
-                                wordcount[3])
+                                storage_value.__dict__[wordcount[2]] =
+                                (wordcount[3])
                     storage.new(storage_data[inst_check])
                     storage.save()
 
@@ -176,6 +177,21 @@ class HBNBCommand(cmd.Cmd):
                 temp_line = line_word[1].replace("destroy(", "")
                 id_line = temp_line.replace(")", "").replace("\"", "")
                 self.do_destroy(f"{new_line} {id_line}")
+            elif "update" in line_word[1]:
+                arg = line_word[1].replace("update(", "").replace(")", "")
+                arg_split = ""
+                if ":" in arg:
+                    arg_split = arg.split(", {")
+                else:
+                    arg_split = arg.split(", ")
+                print(arg_split)
+                if len(arg_split) == 3:
+                    attr_id = arg_split[0].replace("\"", "")
+                    attr_name = arg_split[1].replace("\"", "")
+                    attr_value = arg_split[2].replace("\"", "")
+                    attr = f"{attr_id} {attr_name} {attr_value}"
+                    new_attr = f"{line_word[0]} {attr}"
+                    self.do_update(new_attr)
         else:
             print(f"** NO COMMAND FOR {line}**")
 
